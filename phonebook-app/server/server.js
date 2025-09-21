@@ -12,21 +12,17 @@ const CONTACTS_COLLECTION = "contacts";
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
 
 async function startServer() {
+  console.log("URI:", process.env.MONGODB_URI); // проверь вывод
+
   try {
     const client = new MongoClient(uri, {
-      tls: true,
-      tlsAllowInvalidCertificates: false,
-      tlsInsecure: false,
-      serverSelectionTimeoutMS: 30000,
+      serverSelectionTimeoutMS: 5000,
       retryWrites: true,
-      retryReads: true,
-      connectTimeoutMS: 30000,
-      socketTimeoutMS: 45000
     });
 
     await client.connect();
-    const db = client.db();
-    console.log("База данных подключена");
+    const db = client.db("Cluster0"); // или имя базы
+    console.log("База данных подключена")
 
     app.locals.db = db;
 
@@ -116,6 +112,8 @@ app.delete("/api/contacts/:id", async (req, res) => {
 // ===== Angular build =====
 const distDir = path.join(__dirname, "..", "dist", "phonebook-app");
 app.use(express.static(distDir));
-app.get("/*", (req, res) => {
+
+// Правильный способ обработки всех маршрутов для Angular
+app.get((req, res) => {
   res.sendFile(path.join(distDir, "index.html"));
 });
