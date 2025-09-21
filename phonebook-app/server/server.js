@@ -13,7 +13,11 @@ const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
 
 async function startServer() {
   try {
-    const client = new MongoClient(uri, { tls: true });
+    const client = new MongoClient(uri, {
+      tls: true,
+      tlsAllowInvalidCertificates: false,
+      serverSelectionTimeoutMS: 5000
+    });
     await client.connect();
     const db = client.db();
     console.log("База данных подключена");
