@@ -55,9 +55,13 @@ app.post("/api/contacts", (req, res) => {
 
 // ... остальные методы (get by id, put, delete) такие же ...
 
+app.get("/api/contacts/:id", function(req, res) {});
+app.put("/api/contacts/:id", function(req, res) {});
+app.delete("/api/contacts/:id", function(req, res) {});
+
 // ===== Angular build =====
 const distDir = path.join(__dirname, "..", "dist", "phonebook-app");
 app.use(express.static(distDir));
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(distDir, "index.html"));
 });
