@@ -15,9 +15,11 @@ async function startServer() {
   console.log("URI:", process.env.MONGODB_URI); // проверь вывод
 
   try {
-    const client = new MongoClient(uri, {
-      serverSelectionTimeoutMS: 5000,
-      retryWrites: true,
+    const client = new MongoClient(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      tls: true,
+      tlsAllowInvalidCertificates: true
     });
 
     await client.connect();
