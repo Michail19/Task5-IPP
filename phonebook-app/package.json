@@ -2,9 +2,9 @@
   "name": "phonebook-app",
   "version": "0.0.0",
   "scripts": {
-    "ng": "../node_modules/.bin/ng",
-    "start": "node ../server/server.js",
-    "build": "../node_modules/.bin/ng build --configuration production",
+    "ng": "ng",
+    "start": "node server/server.js",
+    "build": "ng build --configuration production",
     "postinstall": "npm run build"
   },
   "prettier": {
