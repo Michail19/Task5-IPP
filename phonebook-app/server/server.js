@@ -16,8 +16,11 @@ async function startServer() {
     const client = new MongoClient(uri, {
       tls: true,
       tlsAllowInvalidCertificates: false,
-      serverSelectionTimeoutMS: 5000
+      serverSelectionTimeoutMS: 10000,
+      retryWrites: true,
+      w: 'majority'
     });
+
     await client.connect();
     const db = client.db();
     console.log("База данных подключена");
