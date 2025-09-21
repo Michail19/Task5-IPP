@@ -16,9 +16,12 @@ async function startServer() {
     const client = new MongoClient(uri, {
       tls: true,
       tlsAllowInvalidCertificates: false,
-      serverSelectionTimeoutMS: 10000,
+      tlsInsecure: false,
+      serverSelectionTimeoutMS: 30000,
       retryWrites: true,
-      w: 'majority'
+      retryReads: true,
+      connectTimeoutMS: 30000,
+      socketTimeoutMS: 45000
     });
 
     await client.connect();
