@@ -105,14 +105,18 @@ app.delete("/api/contacts/:id", async (req, res) => {
 });
 
 // ===== Angular Frontend =====
-const distPath = path.join(__dirname, "../dist"); // <--- вот здесь
+const distPath = path.join(__dirname, "../dist/phonebook-app"); // <--- именно сюда Angular собирает
 
 app.use(express.static(distPath));
 
-// SPA fallback
+// SPA fallback: все остальные маршруты → index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
+import fs from "fs";
+console.log("Содержимое dist:", fs.readdirSync(path.join(__dirname, "../dist")));
+
