@@ -5,6 +5,8 @@ const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.json({ limit: '10mb' })); // JSON с лимитом
+app.use(express.urlencoded({ extended: true })); // form-data
 
 const CONTACTS_COLLECTION = "contacts";
 
@@ -39,13 +41,6 @@ async function startServer() {
 startServer();
 
 // ===== API =====
-app.use(express.json({ type: 'application/json' }));
-app.use(express.urlencoded({ extended: true }));
-
-app.use(bodyParser.json({
-  type: 'application/json',
-  limit: '10mb'
-}));
 
 // GET все контакты
 app.get("/api/contacts", async (req, res) => {
