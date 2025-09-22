@@ -105,7 +105,7 @@ app.delete("/api/contacts/:id", async (req, res) => {
 });
 
 // ===== Angular Frontend =====
-const distPath = path.join(__dirname, "../dist/phonebook-app/phonebook-app");
+const distPath = path.join(__dirname, "../dist/phonebook-app/browser");
 
 app.use(express.static(distPath));
 
