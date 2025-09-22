@@ -1,14 +1,10 @@
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const { MongoClient, ObjectId } = require("mongodb");
-const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.json({ limit: '10mb' })); // JSON с лимитом
-app.use(express.urlencoded({ extended: true })); // form-data
-
-const CONTACTS_COLLECTION = "contacts";
 
 // ===== MongoDB =====
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
@@ -57,11 +53,10 @@ app.get("/api/contacts", async (req, res) => {
 app.get("/api/contacts/:id", async (req, res) => {
   const db = req.app.locals.db;
   try {
-    const doc = await db.collection(CONTACTS_COLLECTION).findOne({ _id: new ObjectId(req.params.id) });
-    if (!doc) return res.status(404).json({ error: "Контакт не найден" });
-    res.status(200).json(doc);
+    const contacts = await db.collection(CONTACTS_COLLECTION).find().toArray();
+    res.json(contacts);
   } catch (err) {
-    res.status(500).json({ error: "Не удалось получить контакт" });
+    res.status(500).json({ error: "Failed to fetch contacts" });
   }
 });
 
@@ -93,14 +88,10 @@ app.put("/api/contacts/:id", async (req, res) => {
   delete updateDoc._id;
 
   try {
-    const result = await db.collection(CONTACTS_COLLECTION).updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $set: updateDoc }
-    );
-    if (result.matchedCount === 0) return res.status(404).json({ error: "Контакт не найден" });
-    res.status(200).json({ _id: req.params.id, ...updateDoc });
+    const result = await db.collection(CONTACTS_COLLECTION).insertOne(req.body);
+    res.status(201).json(result.ops[0]);
   } catch (err) {
-    res.status(500).json({ error: "Не удалось обновить контакт" });
+    res.status(500).json({ error: "Failed to add contact" });
   }
 });
 
@@ -108,19 +99,25 @@ app.put("/api/contacts/:id", async (req, res) => {
 app.delete("/api/contacts/:id", async (req, res) => {
   const db = req.app.locals.db;
   try {
-    const result = await db.collection(CONTACTS_COLLECTION).deleteOne({ _id: new ObjectId(req.params.id) });
-    if (result.deletedCount === 0) return res.status(404).json({ error: "Контакт не найден" });
-    res.status(200).json({ _id: req.params.id });
+    const result = await db.collection(CONTACTS_COLLECTION).deleteOne({_id: new ObjectId(req.params.id)});
+    if (result.deletedCount === 0) return res.status(404).json({error: "Контакт не найден"});
+    res.status(200).json({_id: req.params.id});
   } catch (err) {
-    res.status(500).json({ error: "Не удалось удалить контакт" });
+    res.status(500).json({error: "Не удалось удалить контакт"});
   }
 });
 
-// ===== Angular build =====
-const distDir = path.join(__dirname, "..", "dist", "phonebook-app");
-app.use(express.static(distDir));
+// ===== Angular Frontend =====
+const distPath = path.join(__dirname, "../dist/phonebook-app");
+app.use(express.static(distPath));
 
-// Правильный способ обработки всех маршрутов для Angular
-app.get((req, res) => {
-  res.sendFile(path.join(distDir, "index.html"));
+// Все остальные маршруты → index.html (SPA fallback)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
+});
+
+// ===== Server Start =====
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
