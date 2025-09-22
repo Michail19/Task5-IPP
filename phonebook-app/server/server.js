@@ -9,32 +9,25 @@ app.use(bodyParser.json());
 // ===== MongoDB =====
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
 
-async function startServer() {
-  console.log("URI:", process.env.MONGODB_URI); // проверь вывод
+console.log("URI:", process.env.MONGODB_URI); // проверь вывод
 
-  try {
-    const client = new MongoClient(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      tls: true,
-      tlsAllowInvalidCertificates: true
-    });
+try {
+  const client = new MongoClient(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true,
+    tlsAllowInvalidCertificates: true
+  });
 
-    await client.connect();
-    const db = client.db("Cluster0"); // или имя базы
-    console.log("База данных подключена")
+  await client.connect();
+  const db = client.db("Cluster0"); // или имя базы
+  console.log("База данных подключена")
 
-    app.locals.db = db;
-
-    const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => console.log("Приложение запущено на порту", PORT));
-  } catch (err) {
-    console.error("Ошибка подключения к MongoDB:", err);
-    process.exit(1);
-  }
+  app.locals.db = db;
+} catch (err) {
+  console.error("Ошибка подключения к MongoDB:", err);
+  process.exit(1);
 }
-
-startServer();
 
 // ===== API =====
 
