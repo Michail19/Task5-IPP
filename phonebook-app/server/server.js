@@ -83,6 +83,9 @@ app.post("/api/contacts", async (req, res) => {
     const result = await db.collection(CONTACTS_COLLECTION).insertOne(newContact);
     newContact._id = result.insertedId;
     res.status(201).json(newContact);
+    console.log(result);
+    console.log(newContact.name);
+    console.log(newContact.email);
   } catch (err) {
     res.status(500).json({ error: "Не удалось создать контакт" });
   }
