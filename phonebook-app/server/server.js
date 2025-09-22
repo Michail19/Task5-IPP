@@ -105,7 +105,7 @@ app.delete("/api/contacts/:id", async (req, res) => {
 });
 
 // ===== Angular Frontend =====
-const distPath = path.join(__dirname, "../dist/phonebook-app"); // <--- именно сюда Angular собирает
+const distPath = path.join(__dirname, "../dist/phonebook-app/phonebook-app");
 
 app.use(express.static(distPath));
 
@@ -118,5 +118,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 
 import fs from "fs";
-console.log("Содержимое dist:", fs.readdirSync(path.join(__dirname, "../dist")));
+console.log("Содержимое dist/phonebook-app:", fs.readdirSync(path.join(__dirname, "../dist/phonebook-app")));
 
