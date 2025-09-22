@@ -118,5 +118,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 
 import fs from "fs";
-console.log("Содержимое dist/phonebook-app:", fs.readdirSync(path.join(__dirname, "../dist/phonebook-app")));
+console.log("Содержимое dist/phonebook-app/browser:", fs.readdirSync(path.join(__dirname, "../dist/phonebook-app/browser")));
 
