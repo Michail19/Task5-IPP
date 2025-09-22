@@ -105,10 +105,10 @@ app.delete("/api/contacts/:id", async (req, res) => {
 });
 
 // ===== Angular Frontend =====
-const distPath = path.join(__dirname, "../dist/phonebook-app");
-app.use(express.static(distPath));
+const distPath = path.join(__dirname, "../dist");
 
 // Все остальные маршруты → index.html (SPA fallback)
+app.use(express.static(distPath));
 app.get("*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
