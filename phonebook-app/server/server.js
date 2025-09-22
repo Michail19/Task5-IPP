@@ -1,7 +1,10 @@
-const express = require("express");
-const path = require("path");
-const bodyParser = require("body-parser");
-const { MongoClient, ObjectId } = require("mongodb");
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import { MongoClient, ObjectId } from "mongodb";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(bodyParser.json());
