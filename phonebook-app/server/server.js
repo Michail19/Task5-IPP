@@ -10,6 +10,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(bodyParser.json());
 
+const CONTACTS_COLLECTION = "contacts";
+
 // ===== MongoDB =====
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
 
